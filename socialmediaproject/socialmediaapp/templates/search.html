@@ -1,6 +1,77 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<style>
+  /* Center the form */
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 50px;
+}
+
+/* Style the input field */
+.form-control {
+  width: 50%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+/* Style the search button */
+.btn-primary {
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 14px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 10px 0;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+/* Style the results */
+ul {
+  list-style-type: none;
+  margin: 50px auto;
+  padding: 0;
+  width: 50%;
+}
+
+li {
+  margin: 10px 0;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  display: flex;
+  justify-content: space-between;
+}
+
+a {
+  color: #4CAF50;
+}
+
+/* Style the follow button */
+.follow {
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 8px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  margin-left: 10px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+</style>
   <h1>Search Users</h1>
   <form method="GET" action="{% url 'search' %}">
     <div class="form-group">

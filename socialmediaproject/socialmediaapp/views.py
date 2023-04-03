@@ -14,7 +14,7 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
-from .models import CustomUser, Follow
+from .models import CustomUser, Follow,Notification
 
 
 User = get_user_model()
@@ -123,6 +123,19 @@ def userprofile(request, email):
 
 def camera(request):
     return render(request,"camera.html")
+
+def notifications(request):
+    # Get all notifications for the logged in user
+    notifications = Notification.objects.filter(user=request.user)
+
+    # Mark all notifications as read
+    notifications.update(read=True)
+
+    context = {
+        'notifications': notifications
+    }
+
+    return render(request, 'notifications.html', context)
 
 class profileApiView(ModelViewSet):
     queryset = UserProfile.objects.all()

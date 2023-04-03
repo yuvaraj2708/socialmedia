@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Notifications</h1>
+    {% for notification in notifications %}
+        <div class="notification">
+            {% if notification.posts.all %}
+                <p>{{ notification.user.email }} posted a new post.</p>
+            {% endif %}
+            {% if notification.likes.all %}
+                <p>{{ notification.likes.all|length }} users liked a post.</p>
+            {% endif %}
+            {% if notification.follows.all %}
+                <p>{{ notification.follows.all|length }} users followed {{ notification.user.email }}.</p>
+            {% endif %}
+        </div>
+    {% endfor %}
+{% endblock %}

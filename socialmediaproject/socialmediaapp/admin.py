@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from .models import CustomUser
 from django.contrib.auth import get_user_model
-from .models import UserProfile, Post, Comment, Like, Follow
+from .models import UserProfile, Post, Comment, Like, Follow,Notification
 
 class CustomUserAdmin(UserAdmin):
     model = CustomUser
@@ -43,3 +43,5 @@ class LikeAdmin(admin.ModelAdmin):
 @admin.register(Follow)
 class FollowAdmin(admin.ModelAdmin):
     list_display = ('follower', 'followed')
+
+admin.site.register(Notification)

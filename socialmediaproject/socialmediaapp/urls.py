@@ -1,6 +1,6 @@
 from django.urls import path
 from django.contrib.auth import views as auth_views
-from .views import home, profile, post_create, post_detail, post_like, user_follow,search,userprofile,camera
+from .views import home, profile, post_create, post_detail, post_like, user_follow,search,userprofile,camera,notifications
 from django.conf.urls.static import static
 from django.conf import settings
 
@@ -17,7 +17,8 @@ urlpatterns = [
     path('user/<str:email>/follow/', user_follow, name='user_follow'),
     path('search/',search,name='search'),
     path('userprofile/<str:email>/',userprofile,name='userprofile'),
-    path('camera/',camera,name='camera')
+    path('camera/',camera,name='camera'),
+    path('notifications/', notifications, name='notifications'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 

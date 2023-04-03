@@ -5,45 +5,116 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        /* Default styles for navigation */
-        nav {
-            background-color: #333;
-            overflow: hidden;
-        }
-        nav ul {
-            margin: 0;
-            padding: 0;
-            list-style-type: none;
-            display: flex;
-            justify-content: space-between;
-        }
-        nav li {
-            float: left;
-        }
-        nav li a {
-            display: block;
-            color: white;
-            text-align: center;
-            padding: 14px 16px;
-            text-decoration: none;
-        }
-        nav li a:hover {
-            background-color: #ddd;
-            color: black;
-        }
+       /* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-        /* Media query for smaller screens */
-        @media screen and (max-width: 600px) {
-            nav {
-                overflow: auto;
-            }
-            nav ul {
-                flex-direction: column;
-            }
-            nav li {
-                float: none;
-            }
-        }
+/* Layout */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.col {
+  flex: 1;
+  margin: 10px;
+}
+
+/* Navigation bar */
+nav {
+  background-color: #fff;
+  height: 50px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,.1);
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+}
+
+nav li {
+  margin: 0 10px;
+}
+
+nav li a {
+  color: #000;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+nav li a:hover {
+  color: #3897f0;
+}
+
+/* User profile */
+.profile {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.profile-image {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.profile-username {
+  font-weight: bold;
+}
+
+/* Post */
+.post {
+  background-color: #fff;
+  border: 1px solid #dbdbdb;
+  margin-bottom: 20px;
+}
+
+.post-image {
+  width: 100%;
+  height: auto;
+}
+
+.post-likes {
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+.post-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  padding: 0 10px;
+}
+
+.post-button {
+  display: flex;
+  align-items: center;
+  color: #000;
+  text-decoration: none;
+}
+
+.post-button:hover {
+  color: #3897f0;
+}
+
+.post-button i {
+  margin-right: 5px;
+}
+
     </style>
     {% block head %}
     {% endblock %}
@@ -55,8 +126,9 @@
             {% if request.user.is_authenticated %}
                 <li><a href="{% url 'post_create' %}">Create Post</a></li>
                 <li><a href="{% url 'profile' request.user.email %}">Profile</a></li>
-                <li><a href="{% url 'camera'}">camera</a></li>
+                <li><a href="{% url 'camera'}">Camera</a></li>
                 <li><a href="{%url 'search'%}">Search</a></li>
+                <li><a href="{%url 'notifications'%}">Notifications</a></li>
                 <li><a href="{% url 'logout' %}">Logout</a></li>
             {% else %}
                 <li><a href="{% url 'login' %}">Login</a></li>

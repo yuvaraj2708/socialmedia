@@ -2,7 +2,39 @@
 
 {% block content %}
 
+<style>
+  .card {
+  margin-bottom: 20px;
+}
 
+.card-text {
+  font-size: 16px;
+  line-height: 1.5;
+  margin-bottom: 10px;
+}
+
+.card-text small {
+  font-size: 14px;
+}
+
+.card-body {
+  position: relative;
+}
+
+.btn-primary {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  margin: 10px;
+}
+img {
+  border-radius: 50%;
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+}
+
+</style>
 
   <h1>{{ profile.user.email }}'s Profile</h1>
   <p>{{ profile.bio }}</p>
