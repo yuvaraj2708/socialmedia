@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>{{ post.title }}</h1>
+  <p>{{ post.content }}</p>
+  <p><small class="text-muted">Posted by {{ post.user.email }} on {{ post.created_date }}</small></p>
+  {% if request.user.is_authenticated %}
+    {% if request.user in post.likes.all %}
+      <form action="{% url 'post_like' post.id %}" method="post" style="display: inline;">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Unlike</button>
+      </form>
+    {% else %}
+      <form action="{% url 'post_like' post.id %}" method="post" style="display: inline;">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary">Like</button>
+      </form>
+    {% endif %}
+    <a href="{% url 'post_detail' post.id %}#comments" class="btn btn-secondary">Comments ({{ post.comments.count }})</a>
+    <hr>
+    <form method="post">
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="comment">Leave a comment</label>
+        <textarea class="form-control" id="comment" name="text" rows="3" required></textarea>
+    
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </div>
+    </form>
+    
+  {% else %}
+    <hr>
+    <p>Please <a href="{% url 'login' %}?next={{ request.path }}">log in</a> to like and comment on this post.</p>
+  {% endif %}
+  <hr>
+  <div id="comments">
+    <h2>Comments</h2>
+    {% for comment in comments %}
+    <div class="card mb-3">
+      <div class="card-body">
+        <p class="card-text">{{ comment.content }}</p>
+        <p class="card-text"><small class="text-muted">Commented by {{ comment.user.email }} on {{ comment.created_date }}
+          the comments are : {{comment.text}}
+        </small></p>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endblock %}
