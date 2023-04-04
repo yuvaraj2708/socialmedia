@@ -14,8 +14,7 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
-from .models import CustomUser, Follow,Notification
-
+from .models import CustomUser, Follow,Notification,Message
 
 User = get_user_model()
 
@@ -121,12 +120,38 @@ def userprofile(request, email):
     return render(request, 'userprofile.html', {'user': user, 'posts': posts, 'following': following,'profile':profile})
 
 
-def camera(request):
-    return render(request,"camera.html")
+
+@login_required
+def messages(request, recipient_id=None):
+    if recipient_id:
+        recipient = get_object_or_404(User, id=recipient_id)
+        if request.method == 'POST':
+            content = request.POST.get('message')
+            message = Message.objects.create(sender=request.user, recipient=recipient, content=content)
+            return redirect('messages', recipient_id=recipient_id)
+        messages = Message.objects.filter(
+            Q(sender=request.user, recipient=recipient) |
+            Q(sender=recipient, recipient=request.user)
+        ).order_by('sent_at')
+        context = {'messages': messages, 'recipient': recipient}
+    else:
+        if request.method == 'POST':
+            recipient_id = request.POST.get('recipient')
+            content = request.POST.get('message')
+            recipient = get_object_or_404(User, id=recipient_id)
+            message = Message.objects.create(sender=request.user, recipient=recipient, content=content)
+            return redirect('messages', recipient_id=recipient_id)
+        messages = Message.objects.filter(Q(sender=request.user) | Q(recipient=request.user))
+        recipients = User.objects.exclude(pk=request.user.id)
+        context = {'messages': messages, 'recipients': recipients}
+    return render(request, 'messages.html', context)
+
+
+
 
 def notifications(request):
-    # Get all notifications for the logged in user
-    notifications = Notification.objects.filter(user=request.user)
+    # Get all notifications
+    notifications = Notification.objects.all()
 
     # Mark all notifications as read
     notifications.update(read=True)
@@ -136,6 +161,8 @@ def notifications(request):
     }
 
     return render(request, 'notifications.html', context)
+
+
 
 class profileApiView(ModelViewSet):
     queryset = UserProfile.objects.all()

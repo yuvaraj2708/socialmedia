@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-       /* Reset */
+  /* Reset */
 * {
   margin: 0;
   padding: 0;
@@ -14,7 +14,7 @@
 
 /* Layout */
 .container {
-  max-width: 1200px;
+  max-width: 935px;
   margin: 0 auto;
 }
 
@@ -31,12 +31,12 @@
 /* Navigation bar */
 nav {
   background-color: #fff;
-  height: 50px;
+  height: 54px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0 20px;
-  box-shadow: 0 2px 4px rgba(0,0,0,.1);
+  border-bottom: 1px solid #dbdbdb;
 }
 
 nav ul {
@@ -49,9 +49,10 @@ nav li {
 }
 
 nav li a {
-  color: #000;
+  color: #262626;
   text-decoration: none;
   font-weight: bold;
+  font-size: 1.2rem;
 }
 
 nav li a:hover {
@@ -66,21 +67,22 @@ nav li a:hover {
 }
 
 .profile-image {
-  width: 50px;
-  height: 50px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
   margin-right: 10px;
 }
 
 .profile-username {
   font-weight: bold;
+  font-size: 1rem;
 }
 
 /* Post */
 .post {
   background-color: #fff;
   border: 1px solid #dbdbdb;
-  margin-bottom: 20px;
+  margin-bottom: 60px;
 }
 
 .post-image {
@@ -91,8 +93,93 @@ nav li a:hover {
 .post-likes {
   margin-top: 10px;
   font-weight: bold;
+  font-size: 0.9rem;
 }
 
+.post-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  padding: 0 10px;
+}
+
+.post-button {
+  display: flex;
+  align-items: center;
+  color: #262626;
+  text-decoration: none;
+  font-size: 1.2rem;
+}
+
+.post-button:hover {
+  color: #3897f0;
+}
+
+.post-button i {
+  margin-right: 5px;
+}
+
+/* Animations */
+@keyframes slide-down {
+  0% {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Instagram style specific */
+body {
+  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  background-color: #fafafa;
+}
+
+/* Center main content */
+main {
+  margin: 30px auto;
+}
+
+/* Add padding to top and bottom of page */
+.wrapper {
+  padding: 80px 0;
+}
+
+/* Styling for post comments */
+.comment {
+  display: flex;
+  margin-top: 10px;
+}
+
+.comment-author {
+  font-weight: bold;
+  margin-right: 5px;
+}
+
+.comment-text {
+  font-size: 0.9rem;
+}
+
+/* Styling for input fields */
+input {
+  border: 1px solid #dbdbdb;
+  padding: 10px;
+  margin-right: 10px;
+  font-size: 1.2rem;
+}
+
+input:focus {
+  outline: none;
+  border-color: #3897f0;
+}
+
+/* Styling for buttons */
+button {
+  background-color: #3897f0;
+  border: none;
+}
 .post-buttons {
   display: flex;
   justify-content: space-between;
@@ -111,24 +198,32 @@ nav li a:hover {
   color: #3897f0;
 }
 
-.post-button i {
-  margin-right: 5px;
-}
-
     </style>
     {% block head %}
     {% endblock %}
 </head>
 <body>
     <nav>
-        <ul>
+        <ul>  
+          
+
+          
             <li><a href="{% url 'home' %}">Home</a></li>
             {% if request.user.is_authenticated %}
+            
+            <li><a href="{%url 'search'%}">Search</a></li>
                 <li><a href="{% url 'post_create' %}">Create Post</a></li>
+               
+                <li><a href="{% url 'messages' %}">messenger</a></li>
+                  
+                <li><a href="{%url 'notifications'%}">Notifications</a><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bell" viewBox="0 0 16 16">
+                  <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zM8 1.918l-.797.161A4.002 4.002 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4.002 4.002 0 0 0-3.203-3.92L8 1.917zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5.002 5.002 0 0 1 13 6c0 .88.32 4.2 1.22 6z"/>
+                </svg></li>
+
+                  
+               
+                
                 <li><a href="{% url 'profile' request.user.email %}">Profile</a></li>
-                <li><a href="{% url 'camera'}">Camera</a></li>
-                <li><a href="{%url 'search'%}">Search</a></li>
-                <li><a href="{%url 'notifications'%}">Notifications</a></li>
                 <li><a href="{% url 'logout' %}">Logout</a></li>
             {% else %}
                 <li><a href="{% url 'login' %}">Login</a></li>

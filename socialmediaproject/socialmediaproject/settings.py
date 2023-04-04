@@ -39,9 +39,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'socialmediaapp',
     'rest_framework',
+     'channels',
 ]
 AUTH_USER_MODEL = 'socialmediaapp.CustomUser'
-
+ASGI_APPLICATION = 'socialmediaproject.asgi.application'
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -73,7 +74,11 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'socialmediaproject.wsgi.application'
 
-
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+    },
+}
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 

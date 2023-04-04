@@ -1,6 +1,36 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<style>
+ .like-btn {
+  border: none;
+  background-color: transparent;
+  font-size: 1.2rem;
+  cursor: pointer;
+  outline: none;
+  padding: 0;
+  margin-right: 10px;
+}
+
+.like-btn:focus {
+  outline: none;
+}
+
+.like-btn .heart-icon {
+  display: inline-block;
+  width: 25px;
+  height: 25px;
+  background: url(heart.png) no-repeat center center;
+  background-size: contain;
+  transition: background-image 0.5s;
+}
+
+.like-btn .heart-icon.active {
+  background-image: url(heart-filled.png);
+
+}
+
+</style>
   <h1>{{ post.title }}</h1>
   <p>{{ post.content }}</p>
   <p><small class="text-muted">Posted by {{ post.user.email }} on {{ post.created_date }}</small></p>

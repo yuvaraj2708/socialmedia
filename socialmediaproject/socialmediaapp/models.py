@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser,BaseUserManager,PermissionsMixin
 from django.contrib.auth import get_user_model
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 
 
@@ -100,7 +102,7 @@ class Like(models.Model):
     def __str__(self):
         return f'{self.user} likes {self.post}'
 
-
+    
     ...
 
 class Follow(models.Model):
@@ -118,6 +120,7 @@ class Notification(models.Model):
     likes = models.ManyToManyField(Like, blank=True)
     posts = models.ManyToManyField(Post, blank=True)
     follows = models.ManyToManyField(Follow, blank=True)
+    comments = models.ManyToManyField(Comment, blank=True)
     read = models.BooleanField(default=False)
     created_date = models.DateTimeField(auto_now_add=True)
 
@@ -126,3 +129,37 @@ class Notification(models.Model):
 
     class Meta:
         ordering = ('-created_date', )
+
+    @receiver(post_save, sender=Like)
+    def create_like_notification(sender, instance, created, **kwargs):
+     if created:
+        notification = Notification.objects.create(user=instance.post.user)
+        notification.likes.add(instance)
+        notification.save()
+
+# signal to create notification for new follow
+    @receiver(post_save, sender=Follow)
+    def create_follow_notification(sender, instance, created, **kwargs):
+     if created:
+        notification = Notification.objects.create(user=instance.followed)
+        notification.follows.add(instance)
+        notification.save()
+  
+
+
+
+# signal to create notification for new comment
+    @receiver(post_save, sender=Comment)
+    def create_comment_notification(sender, instance, created, **kwargs):
+     if created:
+        notification = Notification.objects.create(user=instance.post.user)
+        notification.comments.add(instance)
+        notification.save()
+
+
+
+class Message(models.Model):
+    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_messages')
+    recipient = models.ForeignKey(User, on_delete=models.CASCADE, related_name='received_messages')
+    content = models.TextField()
+    sent_at = models.DateTimeField(auto_now_add=True)

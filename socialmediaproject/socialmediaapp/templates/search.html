@@ -2,83 +2,57 @@
 
 {% block content %}
 <style>
-  /* Center the form */
-form {
+ /* Style the search bar container */
+.search-container {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 50px;
+  justify-content: center;
+  margin-top: 20px;
 }
 
-/* Style the input field */
-.form-control {
-  width: 50%;
-  padding: 12px 20px;
-  margin: 8px 0;
+/* Style the search bar input field */
+.search-input {
+  width: 400px;
+  padding: 8px 12px;
   border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box;
+  border-radius: 3px;
+  font-size: 14px;
 }
 
 /* Style the search button */
-.btn-primary {
-  background-color: #4CAF50;
+.search-button {
+  background-color: #3897f0;
   border: none;
   color: white;
-  padding: 14px 20px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  margin: 10px 0;
+  padding: 8px 16px;
+  border-radius: 3px;
   cursor: pointer;
-  border-radius: 4px;
-}
-
-/* Style the results */
-ul {
-  list-style-type: none;
-  margin: 50px auto;
-  padding: 0;
-  width: 50%;
-}
-
-li {
-  margin: 10px 0;
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  display: flex;
-  justify-content: space-between;
-}
-
-a {
-  color: #4CAF50;
-}
-
-/* Style the follow button */
-.follow {
-  background-color: #4CAF50;
-  border: none;
-  color: white;
-  padding: 8px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
   font-size: 14px;
-  margin-left: 10px;
-  cursor: pointer;
-  border-radius: 4px;
+  margin-left: 8px;
 }
+
+/* Style the search button icon */
+.search-button i {
+  margin-right: 4px;
+}
+
 
 </style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
   <h1>Search Users</h1>
   <form method="GET" action="{% url 'search' %}">
     <div class="form-group">
-      <input type="text" name="query" class="form-control" placeholder="Enter user email">
-    </div>
-    <button type="submit" class="btn btn-primary">Search</button>
+      <div class="search-container">
+      <input type="text" name="query" class="search-input" class="form-control" placeholder="Enter user email">
+    
+    <button class="search-button"><i class="fa fa-search"></i>Search</button>
+  </div>
+</div>
   </form>
+ 
+ 
+  
+
 
   {% if query %}
     <h3>Results for "{{ query }}":</h3>

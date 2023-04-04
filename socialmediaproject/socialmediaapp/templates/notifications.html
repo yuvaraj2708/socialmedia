@@ -13,6 +13,9 @@
             {% if notification.follows.all %}
                 <p>{{ notification.follows.all|length }} users followed {{ notification.user.email }}.</p>
             {% endif %}
+            {% if notification.comments.all %}
+                <p>{{ notification.comment.all|length }} user commented </p>
+            {% endif %}
         </div>
     {% endfor %}
 {% endblock %}
