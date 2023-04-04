@@ -15,6 +15,8 @@ from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from .models import CustomUser, Follow,Notification,Message
+from django.utils import timezone
+from django.db import IntegrityError
 
 User = get_user_model()
 
@@ -121,32 +123,33 @@ def userprofile(request, email):
 
 
 
-@login_required
-def messages(request, recipient_id=None):
-    if recipient_id:
-        recipient = get_object_or_404(User, id=recipient_id)
-        if request.method == 'POST':
-            content = request.POST.get('message')
-            message = Message.objects.create(sender=request.user, recipient=recipient, content=content)
-            return redirect('messages', recipient_id=recipient_id)
-        messages = Message.objects.filter(
-            Q(sender=request.user, recipient=recipient) |
-            Q(sender=recipient, recipient=request.user)
-        ).order_by('sent_at')
-        context = {'messages': messages, 'recipient': recipient}
-    else:
-        if request.method == 'POST':
-            recipient_id = request.POST.get('recipient')
-            content = request.POST.get('message')
-            recipient = get_object_or_404(User, id=recipient_id)
-            message = Message.objects.create(sender=request.user, recipient=recipient, content=content)
-            return redirect('messages', recipient_id=recipient_id)
-        messages = Message.objects.filter(Q(sender=request.user) | Q(recipient=request.user))
-        recipients = User.objects.exclude(pk=request.user.id)
-        context = {'messages': messages, 'recipients': recipients}
+
+def messages(request):
+    recipients = User.objects.exclude(id=request.user.id)
+    selected_recipient = None
+    messages = []
+    
+    if request.method == 'POST':
+        recipient_id = request.POST.get('recipient')
+        recipient = User.objects.get(id=recipient_id)
+        selected_recipient = recipient
+        content = request.POST.get('message')
+        if content:
+            try:
+                message = Message.objects.create(sender=request.user, recipient=recipient, content=content)
+                return redirect('messages')
+            except IntegrityError:
+                pass
+        
+        messages = Message.objects.filter(sender=request.user, recipient=recipient) | Message.objects.filter(sender=recipient, recipient=request.user)
+    
+    context = {
+        'recipients': recipients,
+        'selected_recipient': selected_recipient,
+        'messages': messages,
+    }
+    
     return render(request, 'messages.html', context)
-
-
 
 
 def notifications(request):

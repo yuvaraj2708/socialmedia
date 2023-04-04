@@ -1,6 +1,49 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<style>
+ .card {
+  border: none;
+  box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
+}
+
+.card-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.card-text {
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #6e767d;
+}
+
+.card-text small {
+  color: #a7a7a7;
+}
+
+.card-text img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.btn-primary {
+  background-color: #0095f6;
+  border-color: #0095f6;
+  font-weight: 600;
+}
+
+.btn-primary:hover {
+  background-color: #0077c0;
+  border-color: #0077c0;
+}
+
+
+</style>
   <h1>Home</h1>
   {% for post in posts %}
     <div class="card mb-3">
