@@ -1,21 +1,36 @@
-    {% extends 'base.html' %}
+{% extends 'base.html' %}
 
-    {% block content %}
-        <h1>Notifications</h1>
+{% block content %}
+  <div class="container">
+    <h1>Notifications</h1>
+
+    <div class="alert alert-info">
+      {% if unread_count %}
+        You have {{ unread_count }} unread notifications.
+      {% else %}
+        You have {{read_count}} notifications.
+      {% endif %}
+    </div>
+    {{ unread_count.count}}
+    <ul class="list-group">
         {% for notification in notifications %}
-            <div class="notification">
-                {% if notification.posts.all %}
-                    <p>{{ notification.user.email }} posted a new post.</p>
-                {% endif %}
-                {% if notification.likes.all %}
-                    <p>{{ notification.likes.all|length }} users liked a post.</p>
-                {% endif %}
-                {% if notification.follows.all %}
-                    <p>{{ notification.follows.all|length }} users followed {{ notification.user.email }}.</p>
-                {% endif %}
-                {% if notification.comments.all %}
-                    <p>{{ notification.comment.all|length }} user commented </p>
-                {% endif %}
-            </div>
-        {% endfor %}
-    {% endblock %}
+        <div class="notification">
+            {% if notification.posts.all %}
+                <p>{{ notification.user.email }} posted a new post.</p>
+            {% endif %}
+            {% if notification.likes.all %}
+                <p>{{ notification.likes.all|length }} users liked a post.({{notification.user.email}})</p>
+            {% endif %}
+            {% if notification.follows.all %}
+                <p>{{ notification.follows.all|length }} users followed {{ notification.user.email }}.</p>
+            {% endif %}
+            {% if notification.comments.all %}
+                <p>{{ notification.comments.all|length }} ({{notification.user.email}}) commented </p>
+            {% endif %}
+        </li>
+      {% empty %}
+        <li class="list-group-item">No notifications to display.</li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endblock %}

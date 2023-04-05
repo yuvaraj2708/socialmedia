@@ -1,29 +1,145 @@
 {% extends 'base.html' %}
 
-{% block content %}
-  <div class="row">
-    <div class="col-md-3">
+{% block head %}
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <style>
+    .profile-img {
+      width: 200px;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 50%;
+      margin: 0 auto;
+      display: block;
+    }
 
-      <h4>{{ user.email }}</h4>
-      {% if following %}
-        <a href="{% url 'user_follow' user.email %}" class="btn btn-danger">Unfollow</a>
-      {% else %}
-        <a href="{% url 'user_follow' user.email %}" class="btn btn-primary">Follow</a>
-      {% endif %}
+    .username {
+      font-size: 30px;
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    .btn-follow {
+      display: block;
+      margin: 20px auto;
+      width: 150px;
+      font-size: 16px;
+      font-weight: bold;
+      text-align: center;
+      border-radius: 20px;
+    }
+
+    .btn-follow:hover {
+      text-decoration: none;
+      color: white;
+    }
+
+    .posts {
+      margin-top: 50px;
+    }
+
+    .post-img {
+      width: 100%;
+      height: auto;
+      margin-bottom: 20px;
+      box-shadow: 0px 3px 3px rgba(0,0,0,0.1);
+    }
+
+    .post-content {
+      font-size: 18px;
+      margin-bottom: 20px;
+    }
+
+    .post-date {
+      font-size: 14px;
+      color: gray;
+    }
+    /* Set up the stats section */
+.stats {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.stats ul {
+  list-style: none;
+  display: flex;
+  margin: 0;
+  padding: 0;
+}
+
+.stats li {
+  margin-right: 40px;
+}
+
+.stats li:last-child {
+  margin-right: 0;
+}
+
+.stats li span {
+  display: block;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.stats li small {
+  display: block;
+  font-size: 14px;
+  color: #8e8e8e;
+}
+  </style>
+{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <div class="row">
+      <div class="col-md-4 offset-md-4">
+        <img src="{{ MEDIA_URL }}{{ profile.profile_picture }}" class="profile-img">
+        <h1 class="username">{{ user.email }}</h1>
+        <div class="header">
+          ...
+        </div>
+        
+        <div class="stats">
+          <ul>
+            <li>
+              <span>{{ following_count }}</span>
+              <small>Following</small>
+            </li>
+            <li>
+              <span>{{ followers_count }}</span>
+              <small>Followers</small>
+            </li>
+            <li>
+              <span>{{ post_count }}</span>
+              <small>Posts</small>
+            </li>
+          </ul>
+        </div>
+        
+        {% if following %}
+          <a href="{% url 'user_follow' user.email %}" class="btn btn-primary btn-follow">Unfollow</a>
+        {% else %}
+          <a href="{% url 'user_follow' user.email %}" class="btn btn-outline-primary btn-follow">Follow</a>
+        {% endif %}
+      </div>
+      
     </div>
-    
-    <div class="col-md-9">
+
+    <div class="row posts">
       {% for post in posts %}
-        <div class="card mb-3"><img src="{{ MEDIA_URL }}{{ post.getuserprofile.profile_picture }}"class="rounded-circle mb-3">
-          <div class="card-body">
-            <center><h1>Posts</h1></center>
-            <h5 class="card-title"><img src="{{ MEDIA_URL }}{{ post.image }}"></h5>
-            <p class="card-text">{{ post.content }}</p>
-            <p class="card-text"><small class="text-muted">Posted on {{ post.created_date }}</small></p>
+        <div class="col-md-4">
+          <div class="card">
+            <a href="{% url 'post_detail' post.id %}"><img src="{{ MEDIA_URL }}{{ post.image }}" class="card-img-top post-img"></a>
+            <div class="card-body">
+              <p class="card-text post-content">{{ post.content }}</p>
+              <p class="card-text post-date"><small class="text-muted">Posted on {{ post.created_date }}</small></p>
+            </div>
           </div>
         </div>
       {% empty %}
-        <p>No posts found.</p>
+        <div class="col-md-12">
+          <p>No posts found.</p>
+        </div>
       {% endfor %}
     </div>
   </div>

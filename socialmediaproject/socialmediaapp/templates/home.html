@@ -1,46 +1,147 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<style>
- .card {
-  border: none;
-  box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.1);
-  margin-bottom: 30px;
-}
+<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %} {% endblock %}</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        /* Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-.card-title {
-  font-size: 1.2rem;
-  font-weight: 600;
-  margin-bottom: 10px;
-}
+        /* Navigation bar */
+        nav {
+            background-color: #fff;
+            height: 54px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            border-bottom: 1px solid #dbdbdb;
+        }
 
-.card-text {
-  font-size: 1rem;
-  line-height: 1.5;
-  color: #6e767d;
-}
+        nav ul {
+            list-style: none;
+            display: flex;
+        }
 
-.card-text small {
-  color: #a7a7a7;
-}
+        nav li {
+            margin: 0 10px;
+        }
 
-.card-text img {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  margin-right: 10px;
-}
+        nav li a {
+            color: #262626;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
 
-.btn-primary {
-  background-color: #0095f6;
-  border-color: #0095f6;
-  font-weight: 600;
-}
+        nav li a:hover {
+            color: #3897f0;
+        }
 
-.btn-primary:hover {
-  background-color: #0077c0;
-  border-color: #0077c0;
-}
+        /* User profile */
+        .profile {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .profile-image {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .profile-username {
+            font-weight: bold;
+            font-size: 1rem;
+        }
+
+        /* Post */
+        .post {
+            background-color: #fff;
+            border: 1px solid #dbdbdb;
+            margin-bottom: 60px;
+        }
+
+        .post-image {
+            width: 100%;
+            height: auto;
+        }
+
+        .post-likes {
+            margin-top: 10px;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .post-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            padding: 0 10px;
+        }
+
+        .post-button {
+            display: flex;
+            align-items: center;
+            color: #262626;
+            text-decoration: none;
+            font-size: 1.2rem;
+        }
+
+        .post-button:hover {
+            color: #3897f0;
+        }
+
+        .post-button i {
+            margin-right: 5px;
+        }
+
+        /* Instagram style specific */
+        body {
+            font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+            background-color: #fafafa;
+        }
+
+        /* Center main content */
+        main {
+            margin: 30px auto;
+        }
+
+        /* Add padding to top and bottom of page */
+        .wrapper {
+            padding: 80px 0;
+        }
+
+        /* Styling for post comments */
+        .comment {
+            display: flex;
+            margin-top: 10px;
+        }
+
+        .comment-author {
+            font-weight: bold;
+            margin-right: 5px;
+        }
+
+        .comment-text {
+            font-size: 0.9rem;
+        }
+
+        /* Styling for input fields */
+        input {
+            border: 1px solid #dbdbdb;
+            padding: 10px;
+            margin-right: 10px;
+            font-size: 1.
+        }
 
 
 </style>
@@ -51,11 +152,31 @@
         <h5 class="card-title">{{ post.title }}</h5>
         <p class="card-text">{{ post.content }}</p>
         <p class="card-text"><small class="text-muted">
-          <img src="{{ MEDIA_URL }}{{ post.getuserprofile.profile_picture }}"> <br>Posted by {{ post.user }} on {{ post.created_date }} <br>{{post.caption}}</small></p>
+          <a href="{% url 'post_like' post.id %}">
+          <img src="{{ MEDIA_URL }}{{ post.getuserprofile.profile_picture }}"class="img-fluid rounded"></a> <br>Posted by {{ post.user }} on {{ post.created_date }} <br>{{post.caption}}</small></p>
         <a href="{% url 'post_detail' post.id %}" class="btn btn-primary">View</a>
       </div>
     </div>
+
+
   {% empty %}
     <p>No posts found.</p>
   {% endfor %}
+
+  <script>
+    let heart = document.getElementById('heart');
+heart.addEventListener('click',()=>{
+    if(heart.classList.contains('red')){
+        heart.classList.remove('red');
+        heart.classList.add('white');
+        heart.src = 'whiteHeart.png';
+    }else{
+        heart.classList.remove('white');
+        heart.classList.add('red');
+        heart.src = 'redHeart.png';
+    }
+});
+    </script>
 {% endblock %}
+
+

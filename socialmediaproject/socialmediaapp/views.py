@@ -35,8 +35,15 @@ def profile(request, email):
     user = User.objects.get(email=email)
     profile = UserProfile.objects.get(user=user)
     posts = Post.objects.filter(user=user).order_by('-created_date')
-    return render(request, 'profile.html', {'profile': profile, 'posts': posts})
+    following_count = Follow.objects.filter(follower=user).count()
     
+    # Fetch followers count
+    followers_count = Follow.objects.filter(followed=user).count()
+    following = Follow.objects.filter(follower=request.user, followed=user).exists()
+    # Fetch post count
+    post_count = Post.objects.filter(user=user).count()
+    return render(request, 'profile.html', {'profile': profile, 'posts': posts,'following_count':following_count,'followers_count':followers_count,'post_count':post_count,'following':following})
+
 
 @login_required
 def post_create(request):
@@ -117,9 +124,17 @@ def search(request):
 
 def userprofile(request, email):
     user = User.objects.get(email=email)
+    profile = UserProfile.objects.get(user=user)
     posts = Post.objects.filter(user=user).order_by('-created_date')
+    following_count = Follow.objects.filter(follower=user).count()
+    
+    # Fetch followers count
+    followers_count = Follow.objects.filter(followed=user).count()
+    
+    # Fetch post count
+    post_count = Post.objects.filter(user=user).count()
     following = Follow.objects.filter(follower=request.user, followed=user).exists()
-    return render(request, 'userprofile.html', {'user': user, 'posts': posts, 'following': following,'profile':profile})
+    return render(request, 'userprofile.html', {'user': user, 'posts': posts, 'following': following,'profile':profile,'following_count':following_count,'followers_count':followers_count,'post_count':post_count})
 
 
 
@@ -154,17 +169,21 @@ def messages(request):
 
 def notifications(request):
     # Get all notifications
+    user = request.user
     notifications = Notification.objects.all()
 
-    # Mark all notifications as read
     notifications.update(read=True)
 
+    # Get count of unread notifications
+    unread_count = Notification.objects.filter(user=user, read=False).count()
+    read_count = Notification.objects.filter(user=user, read=True).count()
     context = {
-        'notifications': notifications
+        'notifications': notifications,
+        'unread_count': unread_count,
+        'read_count':read_count,
     }
 
     return render(request, 'notifications.html', context)
-
 
 
 class profileApiView(ModelViewSet):
