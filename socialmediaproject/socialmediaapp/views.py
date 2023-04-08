@@ -17,6 +17,7 @@ from django.db.models import Q
 from .models import CustomUser, Follow,Notification,Message
 from django.utils import timezone
 from django.db import IntegrityError
+from django.shortcuts import render, get_object_or_404
 
 User = get_user_model()
 
@@ -42,6 +43,7 @@ def profile(request, email):
     following = Follow.objects.filter(follower=request.user, followed=user).exists()
     # Fetch post count
     post_count = Post.objects.filter(user=user).count()
+    
     return render(request, 'profile.html', {'profile': profile, 'posts': posts,'following_count':following_count,'followers_count':followers_count,'post_count':post_count,'following':following})
 
 
@@ -57,6 +59,8 @@ def post_create(request):
     else:
         form = PostForm()
     return render(request, 'post_create.html', {'form': form})
+
+
 
 
 @login_required
@@ -134,17 +138,27 @@ def userprofile(request, email):
     # Fetch post count
     post_count = Post.objects.filter(user=user).count()
     following = Follow.objects.filter(follower=request.user, followed=user).exists()
+    
+    
+
+        # Check if a message exists
+        
     return render(request, 'userprofile.html', {'user': user, 'posts': posts, 'following': following,'profile':profile,'following_count':following_count,'followers_count':followers_count,'post_count':post_count})
 
 
 
 
-def messages(request):
+def messages(request, recipient_email=None):
     recipients = User.objects.exclude(id=request.user.id)
     selected_recipient = None
     messages = []
     
-    if request.method == 'POST':
+    if recipient_email:
+        recipient = User.objects.get(email=recipient_email)
+        selected_recipient = recipient
+        messages = Message.objects.filter(sender=request.user, recipient=recipient) | Message.objects.filter(sender=recipient, recipient=request.user)
+        
+    elif request.method == 'POST':
         recipient_id = request.POST.get('recipient')
         recipient = User.objects.get(id=recipient_id)
         selected_recipient = recipient
@@ -152,7 +166,7 @@ def messages(request):
         if content:
             try:
                 message = Message.objects.create(sender=request.user, recipient=recipient, content=content)
-                return redirect('messages')
+                return redirect('messages', recipient_email=recipient.email)
             except IntegrityError:
                 pass
         
@@ -165,6 +179,7 @@ def messages(request):
     }
     
     return render(request, 'messages.html', context)
+
 
 
 def notifications(request):
@@ -184,6 +199,14 @@ def notifications(request):
     }
 
     return render(request, 'notifications.html', context)
+
+
+
+
+def reels(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    context = {'post': post}
+    return render(request, 'reels.html', context)
 
 
 class profileApiView(ModelViewSet):

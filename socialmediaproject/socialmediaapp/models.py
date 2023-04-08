@@ -68,7 +68,8 @@ class UserProfile(models.Model):
 
 class Post(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='posts')
+    image = models.ImageField(upload_to='posts', null=True, blank=True)  # Update to ImageField
+    video = models.FileField(upload_to='posts/videos/', null=True, blank=True)  # Add a new FileField for video
     caption = models.CharField(max_length=255)
     created_date = models.DateTimeField(auto_now_add=True)
     likes = models.ManyToManyField(User, related_name='liked_posts')
@@ -163,3 +164,5 @@ class Message(models.Model):
     recipient = models.ForeignKey(User, on_delete=models.CASCADE, related_name='received_messages')
     content = models.TextField()
     sent_at = models.DateTimeField(auto_now_add=True)
+    
+    
